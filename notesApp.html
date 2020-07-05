@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-content>
+                <v-toolbar>
+                    <v-toolbar-title>
+                        <v-icon>fas fa-pen</v-icon> MY NOTE APP | <b>Vue.js</b>
+                    </v-toolbar-title>
+                    <v-spacer></v-spacer>
+
+                    <v-btn @click="launchModal('My email', 'geangontijo07@gmail.com', 'fas fa-envelope')"
+                        color="primary">
+                        <v-icon>fas fa-envelope</v-icon>
+                    </v-btn>
+                    <v-btn @click="launchModal('My whatsapp', '+55 (37) 9 9152-4432', 'fab fa-whatsapp')"
+                        color="primary">
+                        <v-icon>fab fa-whatsapp</v-icon>
+                    </v-btn>
+                    <v-btn color="primary">
+                        <v-icon>fa fa-share</v-icon>
+                    </v-btn>
+                </v-toolbar>
+
+                <v-container>
+                    <v-card class="p-3">
+                        <v-form ref="form" v-model="valid" :lazy-validation="lazy">
+                            <v-text-field id="titleNote" autofocus label="Title" outlined>
+                            </v-text-field>
+                            <v-textarea id="contentNote" rows="1" placeholder="Content"></v-textarea>
+                            <div class="row m-2">
+                                <v-spacer></v-spacer>
+                                <v-btn @click="createNewNote" color='primary'>
+                                    <v-icon class='m-1'>
+                                        fas fa-plus-square
+                                    </v-icon>Create
+                                </v-btn>
+                            </div>
+                        </v-form>
+                    </v-card>
+
+                    <br>
+
+                    <div v-for="(note, i) in notes">
+                        <v-card :id="'cardNote'+i" color="grey lighten-4" class='p-3'>
+
+                            <v-text-field :id="'editedTitleNote'+i" label="Title" readonly outlined :value="note.title">
+                            </v-text-field>
+                            <v-text-field :id="'editedContentNote'+i" label="Content" readonly :value="note.content">
+                            </v-text-field>
+                            Created in: <b>{{ note.date }}</b>
+                            <div class="row m-2">
+                                <v-btn @click="deleteNote(i)" color="error">
+                                    <v-icon class='m-1'>fas fa-trash</v-icon>Delete
+                                </v-btn>
+                                <v-btn @click="enableEditNote(i)" color="warning">
+                                    <v-icon class='m-1'>fas fa-edit</v-icon>Edit
+                                </v-btn>
+                                <v-spacer></v-spacer>
+                                <v-btn @click="saveNote(i)" color="primary">
+                                    <v-icon class="m-1">far fa-save</v-icon>Save
+                                </v-btn>
+                            </div>
+
+                        </v-card>
+                        <br>
+                    </div>
+                    <br>
+                    <h3>Card Vision</h3>
+                    <div class="row p-2">
+                        <div class="p-2" v-for="note in notes">
+                            <v-card class="d-inline-block">
+                                <v-card-text>
+                                    <p class="display-1 text--primary">
+                                        {{ note.title }}
+                                    </p>
+                                    <h5 class="text--primary">
+                                        {{ note.content }}
+                                    </h5>
+                                </v-card-text>
+                            </v-card>
+                        </div>
+                    </div>
+                    <hr>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@1.x/dist/vuetify.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    notes: []
+                };
+            },
+            methods: {
+
+                createNewNote: function () {
+                    let content = $('#contentNote').val();
+                    let title = $('#titleNote').val();
+
+                    let date = new Date();
+                    const s = date.getSeconds();
+                    const mm = date.getMinutes();
+                    const h = date.getHours();
+                    const d = date.getDate();
+                    const m = date.getMonth();
+                    const y = date.getFullYear();
+                    date = y + "/" + m + "/" + d + ' | ' + h + ':' + mm + ':' + s;
+
+                    if (title) {
+                        this.notes.push({ title, content, date });
+                        this.$refs.form.reset()
+                    }
+
+                },
+
+                saveNote: function (index) {
+                    let currentContent = $('#editedContentNote' + index).val();
+                    let currentTitle = $('#editedTitleNote' + index).val();
+                    const el = '#cardNote' + index;
+                    $(el).addClass('grey lighten-4');
+                    const thisNote = this.notes[index];
+                    thisNote.title = currentTitle
+                    thisNote.content = currentContent
+                    $('#editedTitleNote' + index).attr('readonly', 'true');
+                    $('#editedContentNote' + index).attr('readonly', 'true');
+                },
+
+                enableEditNote: function (index) {
+                    const el = '#cardNote' + index;
+                    $('#editedTitleNote' + index).attr('append-icon', 'fas fa-edit');
+                    $('#editedTitleNote' + index).removeAttr('readonly');
+                    $('#editedContentNote' + index).removeAttr('readonly');
+                    $(el).removeClass("grey lighten-4");
+                },
+
+                deleteNote: function (index) {
+                    currentNote = this.notes[index];
+                    let noteRemoved = this.notes.filter(function (value) {
+                        if (value != currentNote) {
+                            return value;
+                        }
+                    })
+                    this.notes = noteRemoved;
+                },
+
+                launchModal: function (title, content, icon = null) {
+                    $.alert({
+                        title: `<i class="${icon}"></i></i> ` + title,
+                        content: content,
+                    });
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
